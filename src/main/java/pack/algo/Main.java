@@ -9,36 +9,47 @@ public class Main {
         int s;
         int t;
         int choice;
-        Query(int s, int t, int choice) { this.s = s; this.t = t; this.choice = choice; }
+
+        Query(int s, int t, int choice) {
+            this.s = s;
+            this.t = t;
+            this.choice = choice;
+        }
     }
 
     static Query readFile(String filePath, Graph g) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
 
         String line = nextNonEmpty(br);
-        if (line == null) { br.close(); return null; }
+        if (line == null) {
+            br.close();
+            return null;
+        }
 
         String[] first = splitWS(line);
-        if (first.length < 3) { br.close(); return null; }
+        if (first.length < 3) {
+            br.close();
+            return null;
+        }
 
-        int s = Integer.parseInt(first[0]);
-        int t = Integer.parseInt(first[1]);
+        String s = first[0];
+        String t = first[1];
         int choice = Integer.parseInt(first[2]);
 
         while ((line = nextNonEmpty(br)) != null) {
             String[] p = splitWS(line);
             if (p.length < 4) continue;
-            int from = Integer.parseInt(p[0]);
-            int to = Integer.parseInt(p[1]);
+            String from = p[0];
+            String to = p[1];
             double dist = Double.parseDouble(p[2]);
             double time = Double.parseDouble(p[3]);
             g.addDirectedEdge(from, to, dist, time);
         }
 
         br.close();
-        g.ensureVertex(s);
-        g.ensureVertex(t);
-        return new Query(s, t, choice);
+        int sI = g.indexOf(s);
+        int tI = g.indexOf(t);
+        return new Query(sI, tI, choice);
     }
 
     static String nextNonEmpty(BufferedReader br) throws Exception {

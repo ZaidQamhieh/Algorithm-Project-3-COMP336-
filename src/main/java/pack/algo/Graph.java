@@ -4,19 +4,25 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Graph {
+    public ArrayList<String> names = new ArrayList<>();
     public ArrayList<LinkedList<Edge>> adj = new ArrayList<>();
 
-    public void ensureVertex(int id) {
-        while (adj.size() <= id) adj.add(new LinkedList<>());
+    public int indexOf(String name) {
+        for (int i = 0; i < names.size(); i++) {
+            if (names.get(i).equals(name)) return i;
+        }
+        names.add(name);
+        adj.add(new LinkedList<>());
+        return names.size() - 1;
     }
 
     public int size() {
         return adj.size();
     }
 
-    public void addDirectedEdge(int from, int to, double dist, double time) {
-        ensureVertex(from);
-        ensureVertex(to);
-        adj.get(from).add(new Edge(to, dist, time));
+    public void addDirectedEdge(String from, String to, double dist, double time) {
+        int f = indexOf(from);
+        int t = indexOf(to);
+        adj.get(f).add(new Edge(t, dist, time));
     }
 }

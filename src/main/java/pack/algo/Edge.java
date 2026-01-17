@@ -11,6 +11,3 @@ public class Edge {
         this.time = time;
     }
 }
-
-
-

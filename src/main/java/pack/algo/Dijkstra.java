@@ -25,13 +25,11 @@ public class Dijkstra {
             Vertex cur = pq.pop();
             int v = cur.v;
 
-            if (v < 0 || v >= n) continue;
             if (known[v]) continue;
             known[v] = true;
 
             for (Edge e : g.adj.get(v)) {
                 int w = e.to;
-                if (w < 0 || w >= n) continue;
                 if (known[w]) continue;
 
                 double cost = (mode == 2) ? e.time : e.dist;
