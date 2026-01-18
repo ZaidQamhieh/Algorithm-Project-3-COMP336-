@@ -9,8 +9,8 @@ import java.io.IOException;
 public class Driver extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        stage.setScene(new Scene(new UI().p(),700,800));
-        stage.setTitle("Dijkstra Algorithm");
+        stage.setScene(new Scene(new UI().p(),700,900));
+        stage.setTitle("Graph Calculator");
         stage.setResizable(false);
         stage.show();
     }

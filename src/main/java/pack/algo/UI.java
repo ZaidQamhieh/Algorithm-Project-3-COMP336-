@@ -14,6 +14,17 @@ import java.io.File;
 import java.io.FileReader;
 
 public class UI {
+    // Light Gray
+    String color1 = "#E2E8F0";
+    // Dark Gray
+    String color2 = "#2B2B2B";
+    // Medium Gray
+    String color3 = "#9CA3AF";
+    // Cool Gray
+    String color4 = "#CCDBDC";
+    // Neutral Gray
+    String color5 = "#8B8B8B";
+
     // Textarea to Display the Calculation Result and Execution Time
     private TextArea result = new TextArea();
     // Time It Took To Execute the Calculation
@@ -41,9 +52,9 @@ public class UI {
                 new Label("Graph Calculator"), new Label("Find The Optimal Path between Two Graphs"),
                 new Label("Source & Destination"), new Label("Calculation Option"), new Label("Results")};
 
-        labelConfig(l[0], 24, "#6366f1");
+        labelConfig(l[0], 24, color1);
         for (int i = 1; i < l.length; i++)
-            labelConfig(l[i], 11, "#cbd5e1");
+            labelConfig(l[i], 11, color4);
 
         // Holds the Header Labels
         VBox header = new VBox(5, l[0], l[1]);
@@ -69,10 +80,10 @@ public class UI {
         mainPane.setAlignment(Pos.TOP_CENTER);
         header.setAlignment(Pos.CENTER);
         // CSS Style String so it be Written once without Redundancy
-        String dupeStyle = "-fx-background-color: rgba(15, 15, 30, 0.5);-fx-border-color: rgba(99, 102, 241, 0.15);" +
-                "-fx-background-radius: 12;-fx-border-radius: 12;-fx-border-width: 1;";
+        String dupeStyle = "-fx-background-color:" + color5 + ";-fx-border-color: " + color4 +
+                ";-fx-background-radius: 14;-fx-border-radius: 12;-fx-border-width: 3;";
         // Main Pane has Slightly a Different Style
-        mainPane.setStyle("-fx-background-color: rgba(26, 26, 46, 0.9);-fx-border-color: rgba(99, 102, 241, 0.2);");
+        mainPane.setStyle("-fx-background-color: " + color2 + ";-fx-border-color: " + color3 + ";-fx-border-width: 2");
         inputVbox.setStyle(dupeStyle);
         rbHbox.setStyle(dupeStyle);
         return mainPane;
@@ -91,9 +102,9 @@ public class UI {
             input[i] = new TextField();
             input[i].setPromptText("Enter " + inputLabels[i]);
             // CSS for the Textfields
-            input[i].setStyle("-fx-background-color: rgba(15, 15, 30, 0.6); " +
-                    "-fx-text-fill: #e2e8f0;-fx-prompt-text-fill: #64748b; " +
-                    "-fx-border-color: rgba(99, 102, 241, 0.3);-fx-border-radius: 10; " +
+            input[i].setStyle("-fx-background-color: " + color1 +
+                    ";-fx-text-fill: " + color2 + ";-fx-prompt-text-fill: " + color2 + "; " +
+                    "-fx-border-color: " + color2 + ";-fx-border-radius: 10; " +
                     "-fx-background-radius: 10;-fx-padding: 14 14 14 14;-fx-font-size: 14px;");
             input[i].setFont(Font.font("Arial", 15));
         }
@@ -105,7 +116,7 @@ public class UI {
             rb[i] = new RadioButton(options[i]);
             rb[i].setToggleGroup(group);
             // CSS for the Radio Buttons
-            rb[i].setStyle("-fx-text-fill: #cbd5e1;-fx-font-size: 14px;-fx-padding: 14 16 14 16;");
+            rb[i].setStyle("-fx-text-fill: " + color2 + ";-fx-font-size: 15px;-fx-font-weight: bolder;-fx-padding: 14 16 14 16;");
             rb[i].setFont(Font.font("Arial", FontWeight.MEDIUM, 15));
         }
         // To Set Names more Easily
@@ -113,8 +124,8 @@ public class UI {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new Button(buttonsNames[i]);
             // CSS for the Buttons
-            buttons[i].setStyle("-fx-background-color: linear-gradient(to bottom right, #6366f1, #8b5cf6); " +
-                    "-fx-text-fill: white; " + "-fx-font-weight: bold; " + "-fx-font-size: 16px; " + "-fx-padding: 16; " + "-fx-background-radius: 12; ");
+            buttons[i].setStyle("-fx-background-color: " + color1 +
+                    ";-fx-text-fill:  " + color2 + ";-fx-font-weight: bold; " + "-fx-font-size: 16px; " + "-fx-padding: 16; " + "-fx-background-radius: 12; ");
             buttons[i].setPrefWidth(400);
         }
         // Sets the Actions for The Buttons
@@ -124,12 +135,12 @@ public class UI {
         result.setPromptText("Results Will Appear Here");
         result.setEditable(false);
         result.setWrapText(true);
-        result.setPrefRowCount(8);
+        result.setPrefRowCount(100);
         // CSS for the Textarea
-        result.setStyle("-fx-control-inner-background: rgba(135,135,255,0.6); " +
-                "-fx-text-fill: #e2e8f0;-fx-prompt-text-fill: #64748b; " +
-                "-fx-border-color: rgba(99, 102, 241, 0.3);-fx-border-radius: 12;-fx-background-radius: 12; " +
-                "-fx-padding: 16;-fx-font-family: 'Courier New';-fx-font-size: 13px;");
+        result.setStyle("-fx-control-inner-background: " + color1 + ";-fx-background-color: " + color1 +
+                ";-fx-focus-color: transparent;-fx-faint-focus-color: transparent;-fx-highlight-fill: " + color2 +
+                ";-fx-highlight-text-fill: " + color2 + ";-fx-text-fill: " + color2 + ";-fx-prompt-text-fill: " + color2 + ";-fx-border-color: " + color4 +
+                ";-fx-border-radius: 12;-fx-background-radius: 15;-fx-border-width: 4;-fx-padding: 16;-fx-font-family: 'Courier New';-fx-font-size: 13px;");
 
         executionTime.setStyle("-fx-text-fill: #94a3b8; " + "-fx-font-size: 12px; " + "-fx-padding: 5 0 0 0;");
     }
@@ -334,6 +345,7 @@ public class UI {
         long hours = minutes / 60;
         return hours + " h";
     }
+
     // a Simpler Way To Display Alerts and to Tidy the Code
     private void showAlert(Alert.AlertType type, String header, String content) {
         Alert alert = new Alert(type);
