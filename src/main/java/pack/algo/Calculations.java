@@ -1,6 +1,6 @@
 package pack.algo;
 
-public class Dijkstra {
+public class Calculations {
     public static final double MAX = Double.POSITIVE_INFINITY;
 
     public double[] dist;
