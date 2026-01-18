@@ -264,18 +264,18 @@ public class UI {
         switch (option) {
             case 0:
                 c.run(g, src, 1);
-                out.append(buildOutput(g, c, src, dst, "Distance"));
+                out.append(buildOutput(g, c, src, dst, "Distance", 1));
                 break;
             case 1:
                 c.run(g, src, 2);
-                out.append(buildOutput(g, c, src, dst, "Time"));
+                out.append(buildOutput(g, c, src, dst, "Time", 2));
                 break;
             case 2:
                 c.run(g, src, 1);
-                out.append(buildOutput(g, c, src, dst, "Distance"));
+                out.append(buildOutput(g, c, src, dst, "Distance", 1));
                 out.append("\n");
                 c.run(g, src, 2);
-                out.append(buildOutput(g, c, src, dst, "Time"));
+                out.append(buildOutput(g, c, src, dst, "Time", 2));
                 break;
         }
         // End Timer
@@ -287,7 +287,7 @@ public class UI {
     }
 
     // Formats Calculation Result For Display
-    private String buildOutput(Graph g, Calculations d, String src, String dst, String title) {
+    private String buildOutput(Graph g, Calculations d, String src, String dst, String title, int option) {
 
         // Get Destination Vertex Index
         int t = g.indexOf(dst);
@@ -310,7 +310,10 @@ public class UI {
         sb.append(title).append(":\n");
 
         // Append Total Cost
-        sb.append("Total = ").append(d.dist[t]).append("\n");
+        if (option == 1)
+            sb.append("Total Distance= ").append(String.format("%.2f", d.dist[t])).append("\n");
+        else
+            sb.append("Total Time= ").append(String.format("%.2f", d.dist[t])).append("\n");
 
         // Append Path Sequence
         sb.append("Path = ");
