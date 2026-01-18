@@ -218,7 +218,6 @@ public class UI {
         StringBuilder out = new StringBuilder();
 
         Dijkstra d = new Dijkstra();
-        d.print();
         long start =System.nanoTime();
         switch (option) {
             case 0:
