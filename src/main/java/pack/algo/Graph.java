@@ -2,79 +2,79 @@ package pack.algo;
 
 public class Graph {
 
-    // Stores All Unique Vertex Names After Graph Is Built
+    // Stores Unique Vertex Names
     private myArrayList<String> names = new myArrayList<>();
-    /* Adjacency List Where Each Index Represents a Vertex
-     Each Inner List Contains Outgoing Edges from That Vertex*/
+
+    // Adjacency List For Each VertexStores Outgoing Edges 
     private myArrayList<myArrayList<Edge>> adj = new myArrayList<>();
-    /* Temporarily Stores Edges Read from Input before Graph Construction
-    Used to Collect All Vertices and Build Adjacency Lists Later*/
+
+    // Stores Edges Before Build 
     private final myArrayList<Edge> pending = new myArrayList<>();
-    // Indicates Whether the Graph Structure Has Been Built
+
+    // Indicates Whether Graph Is Built
     private boolean built = true;
 
-    /*Adds a Directed Edge Definition to the Pending Edge List
-    Actual Graph Structure Is Built Lazily When Needed*/
+    // Adds Directed Edge Builds Later
     public void addDirectedEdge(String from, String to, double dist, double time) {
         if (from == null || to == null) return;
         pending.add(new Edge(from, to, dist, time));
         built = false;
     }
 
-    /* Returns Total Number of Vertices in the Graph
-     Triggers Graph Construction if Not Yet Built*/
+    // Returns Vertex Count Builds If Needed
     public int size() {
         ensureBuilt();
         return adj.size();
     }
 
-    /* Returns the Index of a Vertex Name in the Internal List
-     Triggers Graph Construction if Not Yet Built*/
+    // Returns Vertex Index Builds If Needed
     public int indexOf(String name) {
         ensureBuilt();
         return indexOfBuilt(name);
     }
 
-    /* Returns the Vertex Name Corresponding to a Given Index
-     Returns Null if Index Is Out of Bounds*/
+    // Returns Vertex Name Null If Invalid
     public String nameOf(int idx) {
         ensureBuilt();
         if (idx < 0 || idx >= names.size()) return null;
         return names.get(idx);
     }
 
-    /* Returns All Outgoing Edges from a Given Vertex Index
-    Used by Graph Traversal and Shortest Path Algorithms*/
+    // Returns Outgoing Edges 
     myArrayList<Edge> edgesFrom(int idx) {
         ensureBuilt();
         return adj.get(idx);
     }
 
-    /* Builds the Graph Structure from Pending Edges if Not Already Built
-     This Includes Extracting Vertices, Sorting, Deduplication, and Adjacency Setup*/
+    // Builds Graph From Edges 
     private void ensureBuilt() {
         if (built) return;
-        // Collects All Source and Destination Vertex Names from Pending Edges
+
+        // Collects Vertex Names
         myArrayList<String> all = new myArrayList<>(pending.size() * 2);
         for (int i = 0; i < pending.size(); i++) {
             Edge e = pending.get(i);
             all.add(e.srcName);
             all.add(e.destName);
         }
-        // Sorts All Vertex Names to Enable Binary Search
-        heapSortStrings(all);
-        // Removes Duplicate Vertex Names While Preserving Sorted Order
+
+        // Sorts Names
+        sortStrings(all);
+
+        // Removes Duplicates
         names = new myArrayList<>(all.size());
         for (int i = 0; i < all.size(); i++) {
             String cur = all.get(i);
             if (names.isEmpty() || !names.get(names.size() - 1).equals(cur))
                 names.add(cur);
         }
-        // Initializes an Empty Adjacency List for Each Vertex
+
+        // Creates Adjacency Lists
         adj = new myArrayList<>(names.size());
         for (int i = 0; i < names.size(); i++)
             adj.add(new myArrayList<>(5));
-        // Converts Pending Edge Definitions into Indexed Adjacency Entries
+
+        // Adds Indexed Edges
         for (int i = 0; i < pending.size(); i++) {
             Edge pe = pending.get(i);
             int f = indexOfBuilt(pe.srcName);
@@ -82,16 +82,15 @@ public class Graph {
             if (f >= 0 && t >= 0)
                 adj.get(f).add(new Edge(t, pe.dist, pe.time));
         }
-        // Clears Temporary Edge Storage and Marks Graph as Fully Built
+
+        // Clears Temporary Data
         pending.clear();
         built = true;
     }
 
-    /* Performs Binary Search on the Sorted Vertex Name List
-    Used Internally After Graph Construction*/
+    // Binary Search On Names 
     private int indexOfBuilt(String name) {
-        int lo = 0;
-        int hi = names.size() - 1;
+        int lo = 0, hi = names.size() - 1;
         while (lo <= hi) {
             int mid = (lo + hi) >>> 1;
             int c = names.get(mid).compareTo(name);
@@ -102,15 +101,12 @@ public class Graph {
         return -1;
     }
 
-    /* Sorts a List of Strings Using a Min-Heap
-     Used to Order Vertex Names before Deduplication*/
-    private void heapSortStrings(myArrayList<String> a) {
-        if (a.size() <= 1) return;
-
-        myHeap<String> heap = new myHeap<>();
-        for (String s : a) heap.add(s);
-
-        for (int i = 0; i < a.size(); i++)
-            a.set(i, heap.pop());
+    // Heap Sort For Strings 
+    private void sortStrings(myArrayList<String> a) {
+        int n = a.size();
+        if (n <= 1) return;
+        myHeap<String> h = new myHeap<>();
+        for (int i = 0; i < n; i++) h.add(a.get(i));
+        for (int i = 0; i < n; i++) a.set(i, h.pop());
     }
 }
