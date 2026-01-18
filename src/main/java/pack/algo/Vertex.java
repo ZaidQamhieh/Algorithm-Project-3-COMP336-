@@ -1,11 +1,11 @@
 package pack.algo;
 
 public class Vertex implements Comparable<Vertex> {
-    public int v;
+    public int idx;
     public double key;
 
-    public Vertex(int v, double key) {
-        this.v = v;
+    public Vertex(int idx, double key) {
+        this.idx = idx;
         this.key = key;
     }
 

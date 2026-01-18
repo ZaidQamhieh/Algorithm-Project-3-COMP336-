@@ -3,66 +3,86 @@ package pack.algo;
 import java.util.ArrayList;
 
 public class Dijkstra {
-    public static final double INF = Double.POSITIVE_INFINITY;
+    public static final double MAX = Double.POSITIVE_INFINITY;
 
-    public static Result run(Graph g, int s, int mode) {
+    public double[] dist;
+    public int[] parent;
+
+    public void run(Graph g, String sName, int mode) {
+        int s = g.indexOf(sName);
         int n = g.size();
-        double[] d = new double[n];
-        int[] p = new int[n];
+
+        dist = new double[n];
+        parent = new int[n];
         boolean[] known = new boolean[n];
 
         for (int i = 0; i < n; i++) {
-            d[i] = INF;
-            p[i] = -1;
+            dist[i] = MAX;
+            parent[i] = -1;
             known[i] = false;
         }
 
+        if (s < 0 || s >= n) return;
+
         MinHeap<Vertex> pq = new MinHeap<>();
-        d[s] = 0.0;
+        dist[s] = 0.0;
         pq.add(new Vertex(s, 0.0));
 
         while (!pq.isEmpty()) {
             Vertex cur = pq.pop();
-            int v = cur.v;
+            if (cur == null) break;
 
+            int v = cur.idx;
+            if (v < 0 || v >= n) continue;
             if (known[v]) continue;
+            if (cur.key != dist[v]) continue;
+
             known[v] = true;
 
-            for (Edge e : g.adj.get(v)) {
+            for (Edge e : g.edgesFrom(v)) {
                 int w = e.to;
+                if (w < 0 || w >= n) continue;
                 if (known[w]) continue;
 
                 double cost = (mode == 2) ? e.time : e.dist;
-                double nd = d[v] + cost;
+                double nd = dist[v] + cost;
 
-                if (nd < d[w]) {
-                    d[w] = nd;
-                    p[w] = v;
+                if (nd < dist[w]) {
+                    dist[w] = nd;
+                    parent[w] = v;
                     pq.add(new Vertex(w, nd));
                 }
             }
         }
-
-        return new Result(d, p);
     }
 
-    public static ArrayList<Integer> buildPath(int s, int t, int[] parent) {
-        ArrayList<Integer> path = new ArrayList<>();
+    public ArrayList<String> buildNamePath(Graph g, String sName, String tName) {
+        int s = g.indexOf(sName);
+        int t = g.indexOf(tName);
+
+        ArrayList<String> path = new ArrayList<>();
+        if (dist == null || parent == null) return path;
+        if (s < 0 || t < 0 || s >= dist.length || t >= dist.length) return path;
+        if (dist[t] == MAX) return path;
+
         int cur = t;
         while (cur != -1) {
-            path.add(cur);
+            path.add(g.nameOf(cur));
             if (cur == s) break;
             cur = parent[cur];
         }
-        if (path.isEmpty() || path.get(path.size() - 1) != s) return new ArrayList<>();
+
+        if (path.isEmpty() || !path.get(path.size() - 1).equals(sName)) return new ArrayList<>();
+
         int i = 0, j = path.size() - 1;
         while (i < j) {
-            int tmp = path.get(i);
+            String tmp = path.get(i);
             path.set(i, path.get(j));
             path.set(j, tmp);
             i++;
             j--;
         }
+
         return path;
     }
 }
