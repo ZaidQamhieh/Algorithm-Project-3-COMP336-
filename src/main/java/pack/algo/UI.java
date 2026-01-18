@@ -128,8 +128,36 @@ public class UI {
         if (f == null) return;
 
         Graph ng = new Graph();
+
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String line;
+            // Reads The First Line in The File
+            line = br.readLine();
+            if (line == null) {
+                showAlert(Alert.AlertType.ERROR, "Invalid File", "File is empty");
+                return;
+            }
+
+            String[] first = line.trim().split(" ");
+            if (first.length < 3) {
+                showAlert(Alert.AlertType.ERROR, "Invalid File", "First line format is invalid");
+                return;
+            }
+
+            String src = first[0];
+            String dst = first[1];
+            int choice = Integer.parseInt(first[2]);
+
+            // Set Textfields
+            input[0].setText(src);
+            input[1].setText(dst);
+
+            // Set Radio Buttons
+            if (choice >= 1 && choice <= 3) {
+                rb[choice - 1].setSelected(true);
+                option = choice - 1;
+            }
+
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty()) continue;
@@ -144,6 +172,7 @@ public class UI {
 
                 ng.addDirectedEdge(from, to, dist, time);
             }
+
         } catch (Exception ex) {
             showAlert(Alert.AlertType.ERROR, "File Read Error", "Could Not Read The File");
             return;
@@ -152,6 +181,7 @@ public class UI {
         g = ng;
         showAlert(Alert.AlertType.INFORMATION, "File Loaded", "Graph File Loaded Successfully");
     }
+
 
     // the Action To Calculate the Selected Option
     private void calculate() {
@@ -184,11 +214,12 @@ public class UI {
             return;
         }
 
-        long start = System.nanoTime();
 
         StringBuilder out = new StringBuilder();
-        Dijkstra d = new Dijkstra();
 
+        Dijkstra d = new Dijkstra();
+        d.print();
+        long start =System.nanoTime();
         switch (option) {
             case 0:
                 d.run(g, src, 1);
@@ -205,13 +236,11 @@ public class UI {
                 d.run(g, src, 2);
                 out.append(buildOutput(g, d, src, dst, "Time"));
                 break;
-            default:
-                break;
         }
+        long end = System.nanoTime();
 
         result.setText(out.toString());
 
-        long end = System.nanoTime();
         executionTime.setText("Execution time: " + formatTime(start, end));
     }
 
@@ -241,14 +270,25 @@ public class UI {
     // Formats the Time Taken Between start and end Into a Suitable Time Unit
     private String formatTime(long start, long end) {
         long nanos = end - start;
-        if (nanos < 10000000) return nanos + " ns";
+        if (nanos < 1000000)
+            return nanos + " ns";
         long millis = nanos / 1000000;
-        if (millis < 1000) return millis + " ms";
+        if (millis < 1000)
+            return millis + " ms";
+
         long seconds = millis / 1000;
-        if (seconds < 3600) return seconds + " s";
-        long hours = seconds / 3600;
+        if (seconds < 60)
+            return seconds + " s";
+
+        long minutes = seconds / 60;
+        if (minutes < 60)
+            return minutes + " min";
+
+        long hours = minutes / 60;
         return hours + " h";
     }
+
+
     // a Simpler Way To Display Alerts and to Tidy the Code
     private void showAlert(Alert.AlertType type, String header, String content) {
         Alert alert = new Alert(type);
