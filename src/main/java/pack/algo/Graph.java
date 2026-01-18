@@ -1,12 +1,10 @@
 package pack.algo;
 
-import java.util.ArrayList;
-
 public class Graph {
-    private ArrayList<String> names = new ArrayList<>();
-    private ArrayList<ArrayList<Edge>> adj = new ArrayList<>();
+    private myArrayList<String> names = new myArrayList<>();
+    private myArrayList<myArrayList<Edge>> adj = new myArrayList<>();
 
-    private final ArrayList<Edge> pending = new ArrayList<>();
+    private final myArrayList<Edge> pending = new myArrayList<>();
     private boolean built = true;
 
     public void addDirectedEdge(String from, String to, double dist, double time) {
@@ -31,7 +29,7 @@ public class Graph {
         return names.get(idx);
     }
 
-    ArrayList<Edge> edgesFrom(int idx) {
+    myArrayList<Edge> edgesFrom(int idx) {
         ensureBuilt();
         return adj.get(idx);
     }
@@ -39,30 +37,30 @@ public class Graph {
     private void ensureBuilt() {
         if (built) return;
 
-        ArrayList<String> all = new ArrayList<>(pending.size() * 2);
+        myArrayList<String> all = new myArrayList<>(pending.size() * 2);
         for (int i = 0; i < pending.size(); i++) {
             Edge e = pending.get(i);
-            all.add(e.fromName);
-            all.add(e.toName);
+            all.add(e.srcName);
+            all.add(e.destName);
         }
 
         heapSortStrings(all);
 
-        names = new ArrayList<>();
+        names = new myArrayList<>(all.size());
         for (int i = 0; i < all.size(); i++) {
             String cur = all.get(i);
             if (names.isEmpty() || !names.get(names.size() - 1).equals(cur))
                 names.add(cur);
         }
 
-        adj = new ArrayList<>(names.size());
+        adj = new myArrayList<>(names.size());
         for (int i = 0; i < names.size(); i++)
-            adj.add(new ArrayList<>(5));
+            adj.add(new myArrayList<>(5));
 
         for (int i = 0; i < pending.size(); i++) {
             Edge pe = pending.get(i);
-            int f = indexOfBuilt(pe.fromName);
-            int t = indexOfBuilt(pe.toName);
+            int f = indexOfBuilt(pe.srcName);
+            int t = indexOfBuilt(pe.destName);
             if (f >= 0 && t >= 0)
                 adj.get(f).add(new Edge(t, pe.dist, pe.time));
         }
@@ -84,7 +82,7 @@ public class Graph {
         return -1;
     }
 
-    private static void heapSortStrings(ArrayList<String> a) {
+    private void heapSortStrings(myArrayList<String> a) {
         if (a.size() <= 1) return;
 
         myHeap<String> heap = new myHeap<>();

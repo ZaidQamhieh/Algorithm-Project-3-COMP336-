@@ -1,6 +1,5 @@
 package pack.algo;
 
-
 public class Dijkstra {
     public static final double MAX = Double.POSITIVE_INFINITY;
 
@@ -39,7 +38,7 @@ public class Dijkstra {
             known[v] = true;
 
             for (Edge e : g.edgesFrom(v)) {
-                int w = e.to;
+                int w = e.destIndex;
                 if (w < 0 || w >= n) continue;
                 if (known[w]) continue;
 

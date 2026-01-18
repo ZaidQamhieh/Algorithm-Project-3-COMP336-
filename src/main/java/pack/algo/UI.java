@@ -12,7 +12,6 @@ import javafx.scene.text.FontWeight;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 public class UI {
     // Textarea to Display the Calculation Result and Execution Time
@@ -218,7 +217,7 @@ public class UI {
         StringBuilder out = new StringBuilder();
 
         Dijkstra d = new Dijkstra();
-        long start =System.nanoTime();
+        long start = System.nanoTime();
         switch (option) {
             case 0:
                 d.run(g, src, 1);

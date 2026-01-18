@@ -2,27 +2,31 @@ package pack.algo;
 
 import java.util.Iterator;
 
-public class myArrayList<T extends Comparable<T>> implements Iterable<T> {
-    private T[] list;
+public class myArrayList<T> implements Iterable<T> {
+    private Object[] list;
     private int capacity;
     private int index;
 
     public myArrayList(int capacity) {
-        list = (T[]) new Comparable[capacity];
+        if (capacity < 1) capacity = 1;
+        list = new Object[capacity];
         this.capacity = capacity;
         index = 0;
     }
+
     public myArrayList() {
         this.capacity = 5;
-        list = (T[]) new Comparable[capacity];
+        list = new Object[capacity];
         index = 0;
     }
 
     // Resizing Array When it Becomes Full
     private void resize() {
         if (index == capacity) {
-            capacity *= 2;
-            T[] newList = (T[]) new Comparable[capacity];
+            if (capacity < 1) capacity = 1;
+            else capacity *= 2;
+
+            Object[] newList = new Object[capacity];
             for (int i = 0; i < index; i++) {
                 newList[i] = list[i];
             }
@@ -51,8 +55,14 @@ public class myArrayList<T extends Comparable<T>> implements Iterable<T> {
 
     // Searches For a Certain Element
     public int search(T obj) {
-        for (int i = 0; i < index; i++)
-            if (list[i].equals(obj)) return i;
+        for (int i = 0; i < index; i++) {
+            Object v = list[i];
+            if (v == null) {
+                if (obj == null) return i;
+            } else {
+                if (v.equals(obj)) return i;
+            }
+        }
         return -1;
     }
 
@@ -60,7 +70,7 @@ public class myArrayList<T extends Comparable<T>> implements Iterable<T> {
     public T get(int index) {
         if (index < 0 || index >= this.index)
             throw new IndexOutOfBoundsException();
-        return list[index];
+        return (T) list[index];
     }
 
     public void set(int idx, T value) {
@@ -69,15 +79,20 @@ public class myArrayList<T extends Comparable<T>> implements Iterable<T> {
         list[idx] = value;
     }
 
-
     // In Case The User Wanted to Forcibly Change The List Length
     public void updateCapacity(int newCap) {
         if (newCap <= list.length) return;
 
-        T[] temp = (T[]) new Comparable[newCap];
+        Object[] temp = new Object[newCap];
         for (int i = 0; i < size(); i++)
             temp[i] = list[i];
         list = temp;
+        capacity = newCap;
+    }
+
+    public void clear() {
+        for (int i = 0; i < index; i++) list[i] = null;
+        index = 0;
     }
 
     // Return if The List Has The Element
@@ -108,7 +123,7 @@ public class myArrayList<T extends Comparable<T>> implements Iterable<T> {
 
             @Override
             public T next() {
-                return list[current++];
+                return (T) list[current++];
             }
         };
     }
