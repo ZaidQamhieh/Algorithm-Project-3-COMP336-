@@ -1,36 +1,17 @@
 package pack.algo;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 
 public class Graph {
-    private static final class PendingEdge {
-        String from;
-        String to;
-        double dist;
-        double time;
-
-        PendingEdge(String from, String to, double dist, double time) {
-            this.from = from;
-            this.to = to;
-            this.dist = dist;
-            this.time = time;
-        }
-    }
-
     private ArrayList<String> names = new ArrayList<>();
-    private ArrayList<LinkedList<Edge>> adj = new ArrayList<>();
+    private ArrayList<ArrayList<Edge>> adj = new ArrayList<>();
 
-    private final ArrayList<String> namePool = new ArrayList<>();
-    private final ArrayList<PendingEdge> pending = new ArrayList<>();
+    private final ArrayList<Edge> pending = new ArrayList<>();
     private boolean built = true;
 
     public void addDirectedEdge(String from, String to, double dist, double time) {
         if (from == null || to == null) return;
-        namePool.add(from);
-        namePool.add(to);
-        pending.add(new PendingEdge(from, to, dist, time));
+        pending.add(new Edge(from, to, dist, time));
         built = false;
     }
 
@@ -50,7 +31,7 @@ public class Graph {
         return names.get(idx);
     }
 
-    LinkedList<Edge> edgesFrom(int idx) {
+    ArrayList<Edge> edgesFrom(int idx) {
         ensureBuilt();
         return adj.get(idx);
     }
@@ -58,26 +39,34 @@ public class Graph {
     private void ensureBuilt() {
         if (built) return;
 
-        ArrayList<String> all = new ArrayList<>(namePool);
-        Collections.sort(all);
+        ArrayList<String> all = new ArrayList<>(pending.size() * 2);
+        for (int i = 0; i < pending.size(); i++) {
+            Edge e = pending.get(i);
+            all.add(e.fromName);
+            all.add(e.toName);
+        }
+
+        heapSortStrings(all);
 
         names = new ArrayList<>();
         for (int i = 0; i < all.size(); i++) {
             String cur = all.get(i);
-            if (names.isEmpty() || !names.get(names.size() - 1).equals(cur)) names.add(cur);
+            if (names.isEmpty() || !names.get(names.size() - 1).equals(cur))
+                names.add(cur);
         }
 
-        adj = new ArrayList<>();
-        for (int i = 0; i < names.size(); i++) adj.add(new LinkedList<>());
+        adj = new ArrayList<>(names.size());
+        for (int i = 0; i < names.size(); i++)
+            adj.add(new ArrayList<>(5));
 
         for (int i = 0; i < pending.size(); i++) {
-            PendingEdge pe = pending.get(i);
-            int f = indexOfBuilt(pe.from);
-            int t = indexOfBuilt(pe.to);
-            if (f >= 0 && t >= 0) adj.get(f).add(new Edge(t, pe.dist, pe.time));
+            Edge pe = pending.get(i);
+            int f = indexOfBuilt(pe.fromName);
+            int t = indexOfBuilt(pe.toName);
+            if (f >= 0 && t >= 0)
+                adj.get(f).add(new Edge(t, pe.dist, pe.time));
         }
 
-        namePool.clear();
         pending.clear();
         built = true;
     }
@@ -93,5 +82,15 @@ public class Graph {
             else hi = mid - 1;
         }
         return -1;
+    }
+
+    private static void heapSortStrings(ArrayList<String> a) {
+        if (a.size() <= 1) return;
+
+        myHeap<String> heap = new myHeap<>();
+        for (String s : a) heap.add(s);
+
+        for (int i = 0; i < a.size(); i++)
+            a.set(i, heap.pop());
     }
 }

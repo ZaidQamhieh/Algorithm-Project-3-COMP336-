@@ -1,11 +1,11 @@
 package pack.algo;
 
-public class MinHeap<T extends Comparable<T>> {
+public class myHeap<T extends Comparable<T>> {
     private T[] list;
     private int size = 0;
 
     // Initialize Heap with Initial Capacity
-    public MinHeap() {
+    public myHeap() {
         list = (T[]) new Comparable[2];
     }
 

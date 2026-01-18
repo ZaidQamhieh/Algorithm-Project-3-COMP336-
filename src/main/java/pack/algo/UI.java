@@ -2,11 +2,17 @@ package pack.algo;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.stage.FileChooser;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 public class UI {
     // Textarea to Display the Calculation Result and Execution Time
@@ -25,6 +31,8 @@ public class UI {
     private int option = 0;
     // The Buttons that Fires the Actions (Calculate index0, Read index1)
     private Button[] buttons = new Button[2];
+
+    private Graph g = null;
 
     // The Method That Will be Used to Call the UI in The Driver
     public VBox p() {
@@ -99,6 +107,7 @@ public class UI {
             buttons[i].setPrefWidth(400);
         }
         buttons[0].setOnAction(e -> calculate());
+        buttons[1].setOnAction(e -> readFile());
 
         result.setPromptText("Results Will Appear Here");
         result.setEditable(false);
@@ -110,6 +119,38 @@ public class UI {
                 "-fx-padding: 16;-fx-font-family: 'Courier New';-fx-font-size: 13px;");
 
         executionTime.setStyle("-fx-text-fill: #94a3b8; " + "-fx-font-size: 12px; " + "-fx-padding: 5 0 0 0;");
+    }
+
+    private void readFile() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select Graph File");
+        File f = fc.showOpenDialog(null);
+        if (f == null) return;
+
+        Graph ng = new Graph();
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                String[] parts = line.split("\\s+");
+                if (parts.length < 4) continue;
+
+                String from = parts[0];
+                String to = parts[1];
+                double dist = Double.parseDouble(parts[2]);
+                double time = Double.parseDouble(parts[3]);
+
+                ng.addDirectedEdge(from, to, dist, time);
+            }
+        } catch (Exception ex) {
+            showAlert(Alert.AlertType.ERROR, "File Read Error", "Could Not Read The File");
+            return;
+        }
+
+        g = ng;
+        showAlert(Alert.AlertType.INFORMATION, "File Loaded", "Graph File Loaded Successfully");
     }
 
     // the Action To Calculate the Selected Option
@@ -138,19 +179,63 @@ public class UI {
             return;
         }
 
+        if (g == null) {
+            showAlert(Alert.AlertType.WARNING, "Read The File First", "You Must Press Read File Before Calculating");
+            return;
+        }
+
         long start = System.nanoTime();
+
+        StringBuilder out = new StringBuilder();
+        Dijkstra d = new Dijkstra();
+
         switch (option) {
             case 0:
+                d.run(g, src, 1);
+                out.append(buildOutput(g, d, src, dst, "Distance"));
                 break;
             case 1:
+                d.run(g, src, 2);
+                out.append(buildOutput(g, d, src, dst, "Time"));
                 break;
             case 2:
+                d.run(g, src, 1);
+                out.append(buildOutput(g, d, src, dst, "Distance"));
+                out.append("\n");
+                d.run(g, src, 2);
+                out.append(buildOutput(g, d, src, dst, "Time"));
                 break;
             default:
                 break;
         }
+
+        result.setText(out.toString());
+
         long end = System.nanoTime();
         executionTime.setText("Execution time: " + formatTime(start, end));
+    }
+
+    private String buildOutput(Graph g, Dijkstra d, String src, String dst, String title) {
+        int t = g.indexOf(dst);
+        if (t < 0 || d.dist == null || t >= d.dist.length || d.dist[t] == Dijkstra.MAX) {
+            return title + ":\nNo Path Found\n";
+        }
+
+        myArrayList<String> path = d.buildNamePath(g, src, dst);
+        if (path == null || path.isEmpty()) {
+            return title + ":\nNo Path Found\n";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(title).append(":\n");
+        sb.append("Total = ").append(d.dist[t]).append("\n");
+        sb.append("Path = ");
+        for (int i = 0; i < path.size(); i++) {
+            if (i > 0) sb.append(" -> ");
+            sb.append(path.get(i));
+        }
+        sb.append("\n");
+        return sb.toString();
     }
 
     // Formats the Time Taken Between start and end Into a Suitable Time Unit

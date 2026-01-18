@@ -1,6 +1,5 @@
 package pack.algo;
 
-import java.util.ArrayList;
 
 public class Dijkstra {
     public static final double MAX = Double.POSITIVE_INFINITY;
@@ -24,7 +23,7 @@ public class Dijkstra {
 
         if (s < 0 || s >= n) return;
 
-        MinHeap<Vertex> pq = new MinHeap<>();
+        myHeap<Vertex> pq = new myHeap<>();
         dist[s] = 0.0;
         pq.add(new Vertex(s, 0.0));
 
@@ -35,7 +34,7 @@ public class Dijkstra {
             int v = cur.idx;
             if (v < 0 || v >= n) continue;
             if (known[v]) continue;
-            if (cur.key != dist[v]) continue;
+            if (cur.key > dist[v]) continue;
 
             known[v] = true;
 
@@ -56,11 +55,11 @@ public class Dijkstra {
         }
     }
 
-    public ArrayList<String> buildNamePath(Graph g, String sName, String tName) {
+    public myArrayList<String> buildNamePath(Graph g, String sName, String tName) {
         int s = g.indexOf(sName);
         int t = g.indexOf(tName);
 
-        ArrayList<String> path = new ArrayList<>();
+        myArrayList<String> path = new myArrayList<>();
         if (dist == null || parent == null) return path;
         if (s < 0 || t < 0 || s >= dist.length || t >= dist.length) return path;
         if (dist[t] == MAX) return path;
@@ -72,7 +71,7 @@ public class Dijkstra {
             cur = parent[cur];
         }
 
-        if (path.isEmpty() || !path.get(path.size() - 1).equals(sName)) return new ArrayList<>();
+        if (path.isEmpty() || !path.get(path.size() - 1).equals(sName)) return new myArrayList<>();
 
         int i = 0, j = path.size() - 1;
         while (i < j) {
