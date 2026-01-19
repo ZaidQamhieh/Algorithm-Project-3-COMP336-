@@ -97,7 +97,7 @@ public class UI {
     // Configuring CSS and Actions for Textfields, Buttons, Radio Buttons, Textarea
     private void configure() {
         // To Set Prompt Text more Easily
-        String[] inputLabels = {"Source Graph", "Destination Graph"};
+        String[] inputLabels = {"Source Vertex", "Destination Vertex"};
         for (int i = 0; i < input.length; i++) {
             input[i] = new TextField();
             input[i].setPromptText("Enter " + inputLabels[i]);
@@ -171,16 +171,21 @@ public class UI {
                 showAlert(Alert.AlertType.ERROR, "Invalid File", "First Line Format is Invalid");
                 return;
             }
-            // Source
-            String src = first[0];
-            // Destination
-            String dst = first[1];
-            // Choice
-            int choice = Integer.parseInt(first[2]);
+            int src;
+            int dst;
+            int choice;
+            try {
+                src = Integer.parseInt(first[0]);
+                dst = Integer.parseInt(first[1]);
+                choice = Integer.parseInt(first[2]);
+            } catch (Exception ex) {
+                showAlert(Alert.AlertType.ERROR, "Invalid File", "First Line Format is Invalid");
+                return;
+            }
             /*These Values will be Set for the Textfields*/
             // Set Textfields
-            input[0].setText(src);
-            input[1].setText(dst);
+            input[0].setText(Integer.toString(src));
+            input[1].setText(Integer.toString(dst));
 
             /* Validates If the Option is Valid or Not
             then Sets the Radio Button Based on the option*/
@@ -200,15 +205,15 @@ public class UI {
                 // If Not 4 Parts it will Move to the Next Line
                 if (parts.length != 4) continue;
                 // Source
-                String from = parts[0];
-                // Destination
-                String to = parts[1];
-                // Distance Weight of the Edge
-                double dist = Double.parseDouble(parts[2]);
-                // Time Weight of the Edge
-                double time = Double.parseDouble(parts[3]);
-                // Add Edge to the Graph
-                ng.addDirectedEdge(from, to, dist, time);
+                try {
+                    int from = Integer.parseInt(parts[0]);
+                    int to = Integer.parseInt(parts[1]);
+                    double dist = Double.parseDouble(parts[2]);
+                    double time = Double.parseDouble(parts[3]);
+                    ng.addDirectedEdge(from, to, dist, time);
+                } catch (Exception ex) {
+                    continue;
+                }
             }
 
         } catch (Exception ex) {
@@ -237,17 +242,26 @@ public class UI {
             }
         }
         // Source
-        String src = input[0].getText().trim();
-        // Destination
-        String dst = input[1].getText().trim();
+        String srcText = input[0].getText().trim();
+        String dstText = input[1].getText().trim();
         // If Source Textfield Left Empty in the UI it will Alert the User to Fill it up
-        if (src.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Fill The Source Textfield", "The Source Field is Empty Enter A Valid Source Graph");
+        if (srcText.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Fill The Source Textfield", "The Source Field is Empty Enter A Valid Source Vertex");
             return;
         }
         // If Source Textfield Left Empty in the UI it will Alert the User to Fill it up
-        if (dst.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Fill The Destination Textfield", "The Destination Field is Empty Enter A Valid Destination Graph");
+        if (dstText.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Fill The Destination Textfield", "The Destination Field is Empty Enter A Valid Destination Vertex");
+            return;
+        }
+
+        int src;
+        int dst;
+        try {
+            src = Integer.parseInt(srcText);
+            dst = Integer.parseInt(dstText);
+        } catch (Exception ex) {
+            showAlert(Alert.AlertType.WARNING, "Invalid Input", "Source and Destination Must Be Integers");
             return;
         }
         // To have Data to Calculate on and Alert the User if not
@@ -287,18 +301,17 @@ public class UI {
     }
 
     // Formats Calculation Result For Display
-    private String buildOutput(Graph g, Calculations d, String src, String dst, String title, int option) {
+    private String buildOutput(Graph g, Calculations d, int src, int dst, String title, int option) {
 
-        // Get Destination Vertex Index
-        int t = g.indexOf(dst);
+        int t = dst;
 
         // Check Invalid Destination or Unreachable Path
-        if (t < 0 || d.getDist() == null || t >= d.getDist().length || d.getDist()[t] == d.getMAX()) {
+        if (t < 0 || d.getDist() == null || t >= d.getDist().length || d.getDist()[t] == d.getInfinity()) {
             return title + ":\nNo Path Found\n";
         }
 
         // Build Path from Source to Destination
-        myArrayList<String> path = d.buildNamePath(g, src, dst);
+        myArrayList<Integer> path = d.buildPath(src, dst);
 
         // Handle Empty or Missing Path
         if (path == null || path.isEmpty()) {
