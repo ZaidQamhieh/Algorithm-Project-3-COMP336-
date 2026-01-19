@@ -26,21 +26,21 @@ public class UI {
     String color5 = "#8B8B8B";
 
     // Textarea to Display the Calculation Result and Execution Time
-    private TextArea result = new TextArea();
+    private final TextArea result = new TextArea();
     // Time It Took To Execute the Calculation
-    private Label executionTime = new Label();
+    private final Label executionTime = new Label();
     // Textfields Where To Input Source and Destination
-    private TextField[] input = new TextField[2];
+    private final TextField[] input = new TextField[2];
     // Radio Buttons To Select Which Metric To Calculate on
     /* Options Are:
      * 1-the Shortest Path Needed to Cut the Distance from Src to Dest
      * 2-the Fastest Time it to Reach Dest from Src
      * 3-Both Option 1 and 2*/
-    private RadioButton[] rb = new RadioButton[3];
+    private final RadioButton[] rb = new RadioButton[3];
     // The Option the User Chooses to Run Calculations Based on
     private int option = 0;
     // The Buttons that Fires the Actions (Calculate index0, Read index1)
-    private Button[] buttons = new Button[2];
+    private final Button[] buttons = new Button[2];
     // The Graph that The Program will Work on
     private Graph g = null;
 
@@ -303,10 +303,8 @@ public class UI {
     // Formats Calculation Result For Display
     private String buildOutput(Graph g, Calculations d, int src, int dst, String title, int option) {
 
-        int t = dst;
-
         // Check Invalid Destination or Unreachable Path
-        if (t < 0 || d.getDist() == null || t >= d.getDist().length || d.getDist()[t] == d.getInfinity()) {
+        if (dst < 0 || d.getDist() == null || dst >= d.getDist().length || d.getDist()[dst] == d.getInfinity()) {
             return title + ":\nNo Path Found\n";
         }
 
@@ -324,9 +322,9 @@ public class UI {
 
         // Append Total Cost
         if (option == 1)
-            sb.append("Total Distance= ").append(String.format("%.2f", d.getDist()[t])).append("\n");
+            sb.append("Total Distance= ").append(String.format("%.2f", d.getDist()[dst])).append("\n");
         else
-            sb.append("Total Time= ").append(String.format("%.2f", d.getDist()[t])).append("\n");
+            sb.append("Total Time= ").append(String.format("%.2f", d.getDist()[dst])).append("\n");
 
         // Append Path Sequence
         sb.append("Path = ");
