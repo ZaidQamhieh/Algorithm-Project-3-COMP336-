@@ -2,14 +2,14 @@ package pack.algo;
 
 public class Edge {
     // Destination index
-    public int destIndex;
+    private int destIndex;
     // Distance between Edges
-    public double dist;
+    private double dist;
     // Time between Edges
-    public double time;
+    private double time;
     // The Label of the Source and Destination
-    public String srcName;
-    public String destName;
+    private String srcName;
+    private String destName;
 
 
     public Edge(int destIndex, double dist, double time) {
@@ -23,5 +23,45 @@ public class Edge {
         this.destName = destName;
         this.dist = dist;
         this.time = time;
+    }
+
+    public int getDestIndex() {
+        return destIndex;
+    }
+
+    public void setDestIndex(int destIndex) {
+        this.destIndex = destIndex;
+    }
+
+    public double getDist() {
+        return dist;
+    }
+
+    public void setDist(double dist) {
+        this.dist = dist;
+    }
+
+    public String getSrcName() {
+        return srcName;
+    }
+
+    public void setSrcName(String srcName) {
+        this.srcName = srcName;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
+    }
+
+    public String getDestName() {
+        return destName;
+    }
+
+    public void setDestName(String destName) {
+        this.destName = destName;
     }
 }

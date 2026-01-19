@@ -39,34 +39,34 @@ public class Calculations {
             Vertex cur = heap.pop();
             // Current Vertex Index
             int v = cur.getIndex();
-            // Skip If Vertex Is Already Finalized
+            // Skip If Vertex Is Already Visited
             if (visited[v])
                 continue;
-            // Skip Outdated Heap Entries
-            if (cur.getKey() > dist[v])
+            // Skip if a Better Cost for the Vertex is Already Known
+            if (cur.getCost() > dist[v])
                 continue;
-            // Mark Vertex as Finalized
+            // Mark Vertex as Visited
             visited[v] = true;
-            // Relax All Outgoing Edges
+            // Process Edges
             for (Edge e : g.edgesFrom(v)) {
                 // Destination Vertex Index
-                int w = e.destIndex;
+                int edgeIndex = e.getDestIndex();
                 // Skip If Destination Is Already Finalized
-                if (visited[w])
+                if (visited[edgeIndex])
                     continue;
                 // Select Cost Based on Mode
                 double cost;
                 if (mode == 2)
-                    cost = e.time;
+                    cost = e.getTime();
                 else
-                    cost = e.dist;
+                    cost = e.getDist();
                 // New Distance Calculation
                 double newDist = dist[v] + cost;
                 // Relaxation Condition
-                if (newDist < dist[w]) {
-                    dist[w] = newDist;
-                    previous[w] = v;
-                    heap.add(new Vertex(w, newDist));
+                if (newDist < dist[edgeIndex]) {
+                    dist[edgeIndex] = newDist;
+                    previous[edgeIndex] = v;
+                    heap.add(new Vertex(edgeIndex, newDist));
                 }
             }
         }
