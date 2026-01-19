@@ -10,7 +10,7 @@ public class Driver extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         stage.setScene(new Scene(new UI().p(),700,900));
-        stage.setTitle("Graph Calculator");
+        stage.setTitle("Shortest Path Calculator");
         stage.setResizable(false);
         stage.show();
     }

@@ -49,7 +49,7 @@ public class UI {
         configure();
         // an Array of Labels for Easier Management
         Label[] l = new Label[]{
-                new Label("Graph Calculator"), new Label("Find The Optimal Path between Two Graphs"),
+                new Label("Shortest Path Calculator"), new Label("Find The Optimal Path between Two Graphs"),
                 new Label("Source & Destination"), new Label("Calculation Option"), new Label("Results")};
 
         labelConfig(l[0], 24, color1);
