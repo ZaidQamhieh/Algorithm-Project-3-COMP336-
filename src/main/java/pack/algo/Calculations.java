@@ -2,7 +2,7 @@ package pack.algo;
 
 public class Calculations {
 
-    // Represents an Unreachable Distance Value
+    // Represents an unreachable Distance Value
     private final double infinity = Double.POSITIVE_INFINITY;
     // Stores the Shortest Known Distance From the Source
     private double[] dist;
@@ -51,7 +51,7 @@ public class Calculations {
             for (Edge e : g.edgesFrom(v)) {
                 // Destination Vertex Index
                 int edgeIndex = e.getDestIndex();
-                // Skip If Destination Is Already Finalized
+                // Skip If Destination Is Already Visited
                 if (visited[edgeIndex])
                     continue;
                 // Select Cost Based on Mode
@@ -62,7 +62,7 @@ public class Calculations {
                     cost = e.getDist();
                 // New Distance Calculation
                 double newDist = dist[v] + cost;
-                // Relaxation Condition
+                // Update if Shorter
                 if (newDist < dist[edgeIndex]) {
                     dist[edgeIndex] = newDist;
                     previous[edgeIndex] = v;
@@ -78,10 +78,11 @@ public class Calculations {
         myArrayList<Integer> path = new myArrayList<>();
         // Ensure Algorithm Has Been Run
         if (dist == null) return path;
-        // Bounds Check for Vertices
+        /* Bounds Check for Vertices 
+        ( Negative, and Vertices that Don't Exist in the Graph )*/
         if (s < 0 || t < 0 || s >= dist.length || t >= dist.length)
             return path;
-        // Destination Is Unreachable
+        // Destination Is unreachable
         if (dist[t] == infinity)
             return path;
         // Follow Path from Destination to Source
