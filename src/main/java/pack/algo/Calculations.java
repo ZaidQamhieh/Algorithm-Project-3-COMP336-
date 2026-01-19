@@ -65,7 +65,8 @@ public class Calculations {
         int cur = t;
         while (cur != -1) {
             path.add(cur);
-            if (cur == s) break;
+            if (cur == s)
+                break;
             cur = parent[cur];
         }
 
