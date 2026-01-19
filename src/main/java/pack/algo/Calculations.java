@@ -25,7 +25,8 @@ public class Calculations {
             previous[i] = -1;
         }
         // Invalid Source Vertex Check
-        if (s < 0 || s >= n) return;
+        if (s < 0 || s >= n)
+            return;
         // Initializing Heap
         myHeap<Vertex> heap = new myHeap<>();
         // Source Distance Is Zero
