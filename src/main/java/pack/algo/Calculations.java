@@ -98,9 +98,9 @@ public class Calculations {
         // Reverse the Path to Correct Order
         int i = 0, j = path.size() - 1;
         while (i < j) {
-            int tmp = path.get(i);
+            int temp = path.get(i);
             path.set(i, path.get(j));
-            path.set(j, tmp);
+            path.set(j, temp);
             i++;
             j--;
         }
