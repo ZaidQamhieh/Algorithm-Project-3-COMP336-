@@ -255,12 +255,12 @@ public class UI {
             showAlert(Alert.AlertType.WARNING, "Fill The Destination Textfield", "The Destination Field is Empty Enter A Valid Destination Vertex");
             return;
         }
-
+        // Source and Destination from Textfields
         int src;
-        int dst;
+        int dest;
         try {
             src = Integer.parseInt(srcText);
-            dst = Integer.parseInt(dstText);
+            dest = Integer.parseInt(dstText);
         } catch (Exception ex) {
             showAlert(Alert.AlertType.WARNING, "Invalid Input", "Source and Destination Must Be Integers");
             return;
@@ -279,18 +279,18 @@ public class UI {
         switch (option) {
             case 0:
                 c.run(graph, src, 1);
-                out.append(buildOutput(graph, c, src, dst, "Distance", 1));
+                out.append(buildOutput(c, src, dest, "Distance", 1));
                 break;
             case 1:
                 c.run(graph, src, 2);
-                out.append(buildOutput(graph, c, src, dst, "Time", 2));
+                out.append(buildOutput(c, src, dest, "Time", 2));
                 break;
             case 2:
                 c.run(graph, src, 1);
-                out.append(buildOutput(graph, c, src, dst, "Distance", 1));
+                out.append(buildOutput(c, src, dest, "Distance", 1));
                 out.append("\n");
                 c.run(graph, src, 2);
-                out.append(buildOutput(graph, c, src, dst, "Time", 2));
+                out.append(buildOutput(c, src, dest, "Time", 2));
                 break;
         }
         // End Timer
@@ -302,38 +302,31 @@ public class UI {
     }
 
     // Formats Calculation Result For Display
-    private String buildOutput(Graph g, Calculations d, int src, int dst, String title, int option) {
-
+    private String buildOutput(Calculations d, int src, int dst, String title, int option) {
         // Check Invalid Destination or Unreachable Path
         if (dst < 0 || d.getDist() == null || dst >= d.getDist().length || d.getDist()[dst] == d.getInfinity()) {
             return title + ":\nNo Path Found\n";
         }
-
         // Build Path from Source to Destination
         myArrayList<Integer> path = d.buildPath(src, dst);
-
         // Handle Empty or Missing Path
         if (path == null || path.isEmpty()) {
             return title + ":\nNo Path Found\n";
         }
-
         // Construct Formatted Output
         StringBuilder sb = new StringBuilder();
         sb.append(title).append(":\n");
-
         // Append Total Cost
         if (option == 1)
             sb.append("Total Distance= ").append(String.format("%.2f", d.getDist()[dst])).append("\n");
         else
             sb.append("Total Time= ").append(String.format("%.2f", d.getDist()[dst])).append("\n");
-
         // Append Path Sequence
         sb.append("Path = ");
         for (int i = 0; i < path.size(); i++) {
             if (i > 0) sb.append(" -> ");
             sb.append(path.get(i));
         }
-
         sb.append("\n");
         return sb.toString();
     }
