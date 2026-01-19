@@ -2,18 +2,26 @@ package pack.algo;
 
 public class Vertex implements Comparable<Vertex> {
     // Index of the Vertex in the Graph
-    public int id;
-    /* Key Value Used for Comparison in Priority Queue
+    private int index;
+    /* Key Value Used for Comparison in Heap
     Represents Current Distance or Cost*/
-    public double key;
+    private double key;
 
-    public Vertex(int id, double key) {
-        this.id = id;
+    public Vertex(int index, double key) {
+        this.index = index;
         this.key = key;
     }
 
-    // Compares Vertices Based on Key Value
-    // Used to Maintain Ordering in Min-Heap
+    public int getIndex() {
+        return index;
+    }
+
+    public double getKey() {
+        return key;
+    }
+
+    /* Compares Vertices Based on Key Value
+    Used to Maintain Ordering in the Heap*/
     @Override
     public int compareTo(Vertex o) {
         if (this.key < o.key) return -1;

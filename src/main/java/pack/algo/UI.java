@@ -49,7 +49,7 @@ public class UI {
         configure();
         // an Array of Labels for Easier Management
         Label[] l = new Label[]{
-                new Label("Shortest Path Calculator"), new Label("Find The Optimal Path between Two Graphs"),
+                new Label("Shortest Path Calculator"),
                 new Label("Source & Destination"), new Label("Calculation Option"), new Label("Results")};
 
         labelConfig(l[0], 24, color1);
@@ -57,21 +57,21 @@ public class UI {
             labelConfig(l[i], 11, color4);
 
         // Holds the Header Labels
-        VBox header = new VBox(5, l[0], l[1]);
+        VBox header = new VBox(5, l[0]);
         // Holds the Input Textfields
         VBox inputVbox = new VBox(15, input);
         // Holds the VBOX above with the Label of Source & Destination
-        VBox inputSection = new VBox(10, l[2], inputVbox);
+        VBox inputSection = new VBox(10, l[1], inputVbox);
         // HBox to hold the Radio Buttons
         HBox rbHbox = new HBox(12, rb);
         // Holds the Label for the Options as well as The Radio Buttons HBox
-        VBox rbSection = new VBox(10, l[3], rbHbox);
+        VBox rbSection = new VBox(10, l[2], rbHbox);
         // Holds the Results Label, Textarea, and Execution Time Label
-        VBox resultSection = new VBox(10, l[4], result, executionTime);
+        VBox resultSection = new VBox(10, l[3], result, executionTime);
         // Holds the Action Buttons ( Calculate Path, Read File )
         HBox buttonsHBox = new HBox(50, buttons);
         // The Main Pane that Holds all the Elements above
-        VBox mainPane = new VBox(25, header, inputSection, rbSection, buttonsHBox, resultSection);
+        VBox mainPane = new VBox(20, header, inputSection, resultSection, rbSection, buttonsHBox);
         // Setting Padding for the Elements
         mainPane.setPadding(new Insets(40));
         inputVbox.setPadding(new Insets(20));
@@ -139,10 +139,10 @@ public class UI {
         // CSS for the Textarea
         result.setStyle("-fx-control-inner-background: " + color1 + ";-fx-background-color: " + color1 +
                 ";-fx-focus-color: transparent;-fx-faint-focus-color: transparent;-fx-highlight-fill: " + color2 +
-                ";-fx-highlight-text-fill: " + color2 + ";-fx-text-fill: " + color2 + ";-fx-prompt-text-fill: " + color2 + ";-fx-border-color: " + color4 +
+                ";-fx-highlight-text-fill: " + color1 + ";-fx-text-fill: " + color2 + ";-fx-prompt-text-fill: " + color2 + ";-fx-border-color: " + color4 +
                 ";-fx-border-radius: 12;-fx-background-radius: 15;-fx-border-width: 4;-fx-padding: 16;-fx-font-family: 'Courier New';-fx-font-size: 13px;");
 
-        executionTime.setStyle("-fx-text-fill: #94a3b8; " + "-fx-font-size: 12px; " + "-fx-padding: 5 0 0 0;");
+        executionTime.setStyle("-fx-text-fill: #94a3b8; " + "-fx-font-size: 15px; " + "-fx-padding: 5 0 0 0;");
     }
 
     private void readFile() {
@@ -171,27 +171,29 @@ public class UI {
                 showAlert(Alert.AlertType.ERROR, "Invalid File", "First Line Format is Invalid");
                 return;
             }
-            int src;
-            int dst;
-            int choice;
+            /* Initialize Source, Destination, Option
+            then Parse the ones in the File to these Variables*/
+            int firstSrc;
+            int firstDest;
+            int option;
             try {
-                src = Integer.parseInt(first[0]);
-                dst = Integer.parseInt(first[1]);
-                choice = Integer.parseInt(first[2]);
+                firstSrc = Integer.parseInt(first[0]);
+                firstDest = Integer.parseInt(first[1]);
+                option = Integer.parseInt(first[2]);
             } catch (Exception ex) {
                 showAlert(Alert.AlertType.ERROR, "Invalid File", "First Line Format is Invalid");
                 return;
             }
-            /*These Values will be Set for the Textfields*/
-            // Set Textfields
-            input[0].setText(Integer.toString(src));
-            input[1].setText(Integer.toString(dst));
+            /*These Values will be Set for the Textfields
+            Set Textfields*/
+            input[0].setText(Integer.toString(firstSrc));
+            input[1].setText(Integer.toString(firstDest));
 
             /* Validates If the Option is Valid or Not
             then Sets the Radio Button Based on the option*/
-            if (choice >= 1 && choice <= 3) {
-                rb[choice - 1].setSelected(true);
-                option = choice - 1;
+            if (option >= 1 && option <= 3) {
+                rb[option - 1].setSelected(true);
+                this.option = option - 1;
             } else {
                 showAlert(Alert.AlertType.ERROR, "Invalid File", "First Line Format is Invalid");
                 return;
@@ -206,13 +208,12 @@ public class UI {
                 if (parts.length != 4) continue;
                 // Source
                 try {
-                    int from = Integer.parseInt(parts[0]);
-                    int to = Integer.parseInt(parts[1]);
+                    int src = Integer.parseInt(parts[0]);
+                    int dest = Integer.parseInt(parts[1]);
                     double dist = Double.parseDouble(parts[2]);
                     double time = Double.parseDouble(parts[3]);
-                    ng.addDirectedEdge(from, to, dist, time);
-                } catch (Exception ex) {
-                    continue;
+                    ng.addDirectedEdge(src, dest, dist, time);
+                } catch (Exception e) {
                 }
             }
 
