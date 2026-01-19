@@ -293,7 +293,7 @@ public class UI {
         int t = g.indexOf(dst);
 
         // Check Invalid Destination or Unreachable Path
-        if (t < 0 || d.dist == null || t >= d.dist.length || d.dist[t] == Calculations.MAX) {
+        if (t < 0 || d.getDist() == null || t >= d.getDist().length || d.getDist()[t] == d.getMAX()) {
             return title + ":\nNo Path Found\n";
         }
 
@@ -311,9 +311,9 @@ public class UI {
 
         // Append Total Cost
         if (option == 1)
-            sb.append("Total Distance= ").append(String.format("%.2f", d.dist[t])).append("\n");
+            sb.append("Total Distance= ").append(String.format("%.2f", d.getDist()[t])).append("\n");
         else
-            sb.append("Total Time= ").append(String.format("%.2f", d.dist[t])).append("\n");
+            sb.append("Total Time= ").append(String.format("%.2f", d.getDist()[t])).append("\n");
 
         // Append Path Sequence
         sb.append("Path = ");
