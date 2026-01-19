@@ -15,12 +15,13 @@ public class Graph {
         return adj.size();
     }
 
-    myArrayList<Edge> edgesFrom(int idx) {
-        if (idx < 0 || idx >= adj.size()) return new myArrayList<>();
-        return adj.get(idx);
+    myArrayList<Edge> edgesFrom(int id) {
+        if (id < 0 || id >= adj.size()) return new myArrayList<>();
+        return adj.get(id);
     }
 
-    private void ensureVertex(int idx) {
-        while (adj.size() <= idx) adj.add(new myArrayList<>(5));
+    private void ensureVertex(int id) {
+        while (adj.size() <= id)
+            adj.add(new myArrayList<>(5));
     }
 }

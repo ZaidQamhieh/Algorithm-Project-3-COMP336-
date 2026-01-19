@@ -2,13 +2,13 @@ package pack.algo;
 
 public class Vertex implements Comparable<Vertex> {
     // Index of the Vertex in the Graph
-    public int idx;
+    public int id;
     /* Key Value Used for Comparison in Priority Queue
     Represents Current Distance or Cost*/
     public double key;
 
-    public Vertex(int idx, double key) {
-        this.idx = idx;
+    public Vertex(int id, double key) {
+        this.id = id;
         this.key = key;
     }
 

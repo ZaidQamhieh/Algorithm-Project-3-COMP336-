@@ -18,29 +18,39 @@ public class Calculations {
         }
         if (s < 0 || s >= n) return;
 
-        myHeap<Vertex> pq = new myHeap<>();
+        myHeap<Vertex> heap = new myHeap<>();
         dist[s] = 0.0;
-        pq.add(new Vertex(s, 0.0));
+        heap.add(new Vertex(s, 0.0));
 
-        while (!pq.isEmpty()) {
-            Vertex cur = pq.pop();
-            if (cur == null) break;
-            int v = cur.idx;
-            if (v < 0 || v >= n) continue;
-            if (known[v]) continue;
-            if (cur.key > dist[v]) continue;
+        while (!heap.isEmpty()) {
+            Vertex cur = heap.pop();
+            if (cur == null)
+                break;
+            int v = cur.id;
+            if (v < 0 || v >= n)
+                continue;
+            if (known[v])
+                continue;
+            if (cur.key > dist[v])
+                continue;
             known[v] = true;
 
             for (Edge e : g.edgesFrom(v)) {
                 int w = e.destIndex;
-                if (w < 0 || w >= n) continue;
-                if (known[w]) continue;
-                double cost = (mode == 2) ? e.time : e.dist;
+                if (w < 0 || w >= n)
+                    continue;
+                if (known[w])
+                    continue;
+                double cost;
+                if (mode == 2)
+                    cost = e.time;
+                else
+                    cost = e.dist;
                 double nd = dist[v] + cost;
                 if (nd < dist[w]) {
                     dist[w] = nd;
                     parent[w] = v;
-                    pq.add(new Vertex(w, nd));
+                    heap.add(new Vertex(w, nd));
                 }
             }
         }
