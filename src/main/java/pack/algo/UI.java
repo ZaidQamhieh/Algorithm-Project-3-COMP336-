@@ -42,7 +42,7 @@ public class UI {
     // The Buttons that Fires the Actions (Calculate index0, Read index1)
     private final Button[] buttons = new Button[2];
     // The Graph that The Program will Work on
-    private Graph g = null;
+    private Graph graph = null;
 
     // The Method That Will be Used to Call the UI in The Driver
     public VBox p() {
@@ -154,7 +154,7 @@ public class UI {
         // If Left Empty it Will Just Skip the Graph Creation Process
         if (f == null) return;
 
-        Graph ng = new Graph();
+        Graph newGraph = new Graph();
 
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             /* Reads the First Line in the File
@@ -212,7 +212,7 @@ public class UI {
                     int dest = Integer.parseInt(parts[1]);
                     double dist = Double.parseDouble(parts[2]);
                     double time = Double.parseDouble(parts[3]);
-                    ng.addDirectedEdge(src, dest, dist, time);
+                    newGraph.addDirectedEdge(src, dest, dist, time);
                 } catch (Exception e) {
                 }
             }
@@ -223,7 +223,7 @@ public class UI {
         }
         /* If Everything Worked out it would Set the New Graph
         to the Class Graph and Display Alert of Success */
-        g = ng;
+        graph = newGraph;
         showAlert(Alert.AlertType.INFORMATION, "File Loaded", "Graph File Loaded Successfully");
     }
 
@@ -266,7 +266,7 @@ public class UI {
             return;
         }
         // To have Data to Calculate on and Alert the User if not
-        if (g == null) {
+        if (graph == null) {
             showAlert(Alert.AlertType.WARNING, "Read The File First", "You Must Press Read File Before Calculating");
             return;
         }
@@ -278,19 +278,19 @@ public class UI {
         long start = System.nanoTime();
         switch (option) {
             case 0:
-                c.run(g, src, 1);
-                out.append(buildOutput(g, c, src, dst, "Distance", 1));
+                c.run(graph, src, 1);
+                out.append(buildOutput(graph, c, src, dst, "Distance", 1));
                 break;
             case 1:
-                c.run(g, src, 2);
-                out.append(buildOutput(g, c, src, dst, "Time", 2));
+                c.run(graph, src, 2);
+                out.append(buildOutput(graph, c, src, dst, "Time", 2));
                 break;
             case 2:
-                c.run(g, src, 1);
-                out.append(buildOutput(g, c, src, dst, "Distance", 1));
+                c.run(graph, src, 1);
+                out.append(buildOutput(graph, c, src, dst, "Distance", 1));
                 out.append("\n");
-                c.run(g, src, 2);
-                out.append(buildOutput(g, c, src, dst, "Time", 2));
+                c.run(graph, src, 2);
+                out.append(buildOutput(graph, c, src, dst, "Time", 2));
                 break;
         }
         // End Timer
