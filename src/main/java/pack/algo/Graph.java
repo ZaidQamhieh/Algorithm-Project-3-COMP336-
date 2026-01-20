@@ -35,6 +35,6 @@ public class Graph {
     private void ensureVertex(int id) {
         // Add Empty Lists Until the Required Index Exists
         while (adjList.size() <= id)
-            adjList.add(new myArrayList<>(4));
+            adjList.add(new myArrayList<>(5));
     }
 }
