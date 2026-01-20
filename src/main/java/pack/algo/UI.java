@@ -212,7 +212,7 @@ public class UI {
                     int dest = Integer.parseInt(parts[1]);
                     double dist = Double.parseDouble(parts[2]);
                     double time = Double.parseDouble(parts[3]);
-                    newGraph.addDirectedEdge(src, dest, dist, time);
+                    newGraph.addEdge(src, dest, dist, time);
                 } catch (Exception e) {
                 }
             }
