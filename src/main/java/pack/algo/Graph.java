@@ -6,7 +6,7 @@ public class Graph {
     private final myArrayList<myArrayList<Edge>> adjList = new myArrayList<>();
 
     // Adds a Directed Edge From Source to Destination
-    public void addDirectedEdge(int src, int dest, double dist, double time) {
+    public void addEdge(int src, int dest, double dist, double time) {
         // Invalid Vertex Index Check
         if (src < 0 || dest < 0)
             return;
